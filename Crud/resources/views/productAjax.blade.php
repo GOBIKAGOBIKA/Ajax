@@ -132,21 +132,26 @@
     });
     
     $('body').on('click', '.deleteProduct', function () {
-     
-        var product_id = $(this).data("id");
-        confirm("Are You sure want to delete !");
-      
+    var product_id = $(this).data("id");
+    
+    if (confirm("Are you sure you want to delete?")) {
         $.ajax({
             type: "DELETE",
-            url: "{{ route('ajaxproducts.store') }}"+'/'+product_id,
+            url: "{{ route('ajaxproducts.destroy', ['ajaxproduct' => ':product_id']) }}".replace(':product_id', product_id),
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             success: function (data) {
+                // Handle the success response here (e.g., remove the deleted row from the table)
                 table.draw();
             },
             error: function (data) {
                 console.log('Error:', data);
             }
         });
-    });
+    }
+});
+
      
   });
 </script>
